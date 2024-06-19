@@ -3,8 +3,8 @@
 library(dplyr)
 library(tidytext)
 
-#download.file("https://raw.githubusercontent.com/jboscomendoza/rpubs/master/sentimientos_afinn/lexico_afinn.en.es.csv",
-#              "lexico_afinn.en.es.csv")
+download.file("https://raw.githubusercontent.com/jboscomendoza/rpubs/master/sentimientos_afinn/lexico_afinn.en.es.csv",
+              "lexico_afinn.en.es.csv")
 
 
 afinn <- read.csv("lexico_afinn.en.es.csv", stringsAsFactors = F, fileEncoding = "latin1") %>%
@@ -12,11 +12,12 @@ afinn <- read.csv("lexico_afinn.en.es.csv", stringsAsFactors = F, fileEncoding =
 head(afinn)
 
 
+# Analizando informacion de usuarios
+#rt <- search_tweets("#Tag", n = 2000, include_rts = FALSE,token = twitter_token, lang ="es")
 
 rt <- read.csv("Clausura2024.csv", stringsAsFactors = F, fileEncoding = "latin1") %>%
   tbl_df()
 head(rt,20)
-
 
 
 tuits_afinn <-
@@ -54,12 +55,6 @@ Plot1<- DatosTabla %>%
   e_title(" ")
 Plot1
 
-
-# Analizando informacion de usuarios
-#rt <- search_tweets("Equipo Pachuca", n = 2000, include_rts = FALSE,token = twitter_token, lang ="es")
-DataUsers<- users_data(rt)
-names(DataUsers)
-
 Descripcion<- rt %>%
   select(Mensaje) %>%
   distinct()
@@ -82,23 +77,6 @@ Palabras
 #Hacemos una nube
 library(wordcloud2)
 wordcloud2(Palabras)
-#wordcloud2(Palabras,
-           color = ifelse(Palabras[, 2] >= 5, 'red', 'skyblue')
-
-Fuentes<- rt %>%
-  select(in_reply_to_screen_name, source) %>%
-  distinct() %>%
-  group_by(source) %>%
-  summarise(Numero=n()) %>%
-  arrange(-Numero)
-head(Fuentes, 10)
-
-Fuentes %>%
-  filter(Numero>=5) %>%
-  arrange(Numero) %>%
-  e_charts(source) %>%
-  e_bar(Numero) %>%
-  e_flip_coords() %>%
-  e_tooltip()
+#wordcloud2(Palabras,color = ifelse(Palabras[, 2] >= 5, 'red', 'skyblue')
 
 
